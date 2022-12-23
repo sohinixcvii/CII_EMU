@@ -22,23 +22,23 @@ import csv
 def build_model(hp):
     model=keras.Sequential()
     model.add(keras.layers.Dense(2,activation='relu'))
-    for i in range(hp.Int("num_layers",1,32)):
+    for i in range(hp.Int("num_layers",layer_range[0],layer_range[1])):
         model.add(
             keras.layers.Dense(
                 #tune number of neurons
-                units=hp.Int("units",min_value=16,max_value=512,step=4),
+                units=hp.Int("units",min_value=neuron_range[0],max_value=neuron_range[1],step=4),
                 #tune activation function to use
-                activation=hp.Choice("activation",['relu','elu','softmax','exponential','linear'])
+                activation=hp.Choice("activation",activ_range)
                     #,'softmin','sigmoid','softplus','softsign','selu']
                 )
             )
     #Tune whether to use dropout
-    dropout_rate=hp.Float("dropout rate",min_value=0.005,max_value=0.5)
+    dropout_rate=hp.Float("dropout rate",min_value=drop_rate_range[0],max_value=drop_rate_range[1])
     if hp.Boolean("dropout"):
         model.add(keras.layers.Dropout(rate=dropout_rate))
     model.add(keras.layers.Dense(6,activation='relu'))
     #Defining optimizer learning rate as a hyperparameters
-    learning_rate=hp.Float("lr",min_value=1e-8,max_value=1e-4,sampling='log')
+    learning_rate=hp.Float("lr",min_value=lr_range[0],max_value=lr_range[1],sampling='log')
     model.compile(
                 optimizer=keras.optimizers.Adam(learning_rate=learning_rate),
                 loss="mse",
@@ -49,12 +49,6 @@ def build_model(hp):
 
 # In[3]:
 hyper=keras_tuner.HyperParameters()
-
-
-'''build_model(hyper)
-kmode=input("Enter k mode axis: ")
-mod_name="k"+kmode
-kmode=[int(kmode)]'''
 
 if tuner_choice=='HyperBand':
     tuner=keras_tuner.Hyperband(
@@ -113,3 +107,7 @@ params_train,params_val,pk_train,pk_val = sm.train_test_split(params_traino,pk_t
 #Performing the optimization and printing results. Takes at least 30 mins. 
 tuner.search(params_train, pk_train, epochs=train_epochs, validation_data=(params_val, pk_val),verbose=0)
 tuner.results_summary()
+
+#res_file=open('HPO','w+')
+#csv.writer(res_file, delimiter=' ').writerows(tuner.results_summary())
+#res_file.close()

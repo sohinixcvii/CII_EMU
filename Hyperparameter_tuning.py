@@ -2,7 +2,10 @@
 # coding: utf-8
 
 # In[1]:
+import warnings
 
+#suppressing all the warnings
+warnings.filterwarnings('ignore')
 
 import keras_tuner
 from tensorflow import keras
@@ -12,6 +15,9 @@ from sklearn.preprocessing import MinMaxScaler
 from keras import losses
 import math
 pi=math.pi
+from ann_input import *
+import csv
+
 
 def build_model(hp):
     model=keras.Sequential()
@@ -42,46 +48,49 @@ def build_model(hp):
 
 
 # In[3]:
+hyper=keras_tuner.HyperParameters()
 
 
-build_model(keras_tuner.HyperParameters())
+'''build_model(hyper)
 kmode=input("Enter k mode axis: ")
 mod_name="k"+kmode
-kmode=[int(kmode)]
+kmode=[int(kmode)]'''
 
-tuner=keras_tuner.Hyperband(
-    hypermodel=build_model,
-    objective='accuracy',
-    max_epochs=10,
-    factor=3,
-    hyperband_iterations=3,
-    # seed=None,
-    # hyperparameters=None,
-    tune_new_entries=True,
-    allow_new_entries=True,
-    # **kwargs
-)
-# tuner = keras_tuner.BayesianOptimization(
-#             hypermodel=build_model,
-#             objective='accuracy',
-#             max_trials=500,
-#             executions_per_trial=3,
-#             directory='tuning_results',
-#             project_name=mod_name
-#             )
+if tuner_choice=='HyperBand':
+    tuner=keras_tuner.Hyperband(
+        hypermodel=build_model,
+        objective=target,
+        max_epochs=2,
+        factor=2,
+        hyperband_iterations=3,
+        # seed=None,
+        # hyperparameters=None,
+        tune_new_entries=True,
+        allow_new_entries=True,
+        # **kwargs
+        )
+elif tuner_choice=='BayesOpt':
+    tuner = keras_tuner.BayesianOptimization(
+                 hypermodel=build_model,
+                 objective=target,
+                 max_trials=5,
+                 executions_per_trial=3,
+                 directory='tuning_results',
+                 project_name=mod_name
+                 )
 
-npk=np.loadtxt('data/Npk.txt',usecols=(2,3,4,5,6,7))
-k=np.loadtxt('data/k.txt')
-n=np.loadtxt('data/nbins.txt')
+npk=np.loadtxt(npk_p,usecols=(2,3,4,5,6,7))
+k=np.loadtxt(k_p)
+n=np.loadtxt(n_p)
+params=np.loadtxt(params_p)         #params
 print("Shape of k: ",np.shape(k),"Shape of nbins: ", np.shape(n),"Shape of npk: ",np.shape(npk))
-path = 'data/'
-params = np.loadtxt(path+'params_LH.txt')                        #params
 
+#Converting to dimensionless power spectrum. Step 1 of reducing dynamic range. 
 dpk=np.empty(np.shape(npk))
 for i in range(len(npk)):
     for j in range(len(npk[0])):
         dpk[i,j]=((k[j]**3)*npk[i,j])/(2*pi**2)
-f=open('data/cii_dpk','w+')
+f=open(dpk_p,'w+')
 for el in dpk:
     for j in el:
         f.write(str(j)+'\n')
@@ -90,24 +99,17 @@ f.truncate()
 f.close()
 print("Minimum dpk before scaling: ",np.min(np.log(dpk))," Maximum dpk before scaling: ",np.max(np.log(dpk)))
 
+#Scaling dpk by using custom scaling formalism
 pk=np.log(dpk)/10
 
 print("Minimum dpk after scaling: ",np.min(np.log(pk))," Maximum dpk after scaling: ",np.max(np.log(pk)))
 
-params_traino,params_test,pk_traino,pk_test = sm.train_test_split(params,pk, test_size=0.1,shuffle=False)
-params_train,params_val,pk_train,pk_val = sm.train_test_split(params_traino,pk_traino, test_size=0.2,shuffle=False)
+#Splitting whole dataset into training set and test set. 90% split
+params_traino,params_test,pk_traino,pk_test = sm.train_test_split(params,pk, test_size=test_frac,shuffle=False)
 
-scaler_1=MinMaxScaler(feature_range=(0, 1))
-scaler_1.fit(params_train)
-params_train=scaler_1.transform(params_train)
-scaler_4=MinMaxScaler(feature_range=(0, 1))
-scaler_4.fit(params_test)
-params_test=scaler_4.transform(params_test)
+#Splitting training set for validation and training (required for hyperparameter optimization)
+params_train,params_val,pk_train,pk_val = sm.train_test_split(params_traino,pk_traino, test_size=val_frac,shuffle=False)
 
-tuner.search(params_train, pk_train, epochs=50, validation_data=(params_val, pk_val))
+#Performing the optimization and printing results. Takes at least 30 mins. 
+tuner.search(params_train, pk_train, epochs=train_epochs, validation_data=(params_val, pk_val),verbose=0)
 tuner.results_summary()
-
-# best_model = tuner.get_best_models(num_models=2)[0]
-#
-# best_model.build(input_shape=(3,3))
-# best_model.summary()

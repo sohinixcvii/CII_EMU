@@ -14,8 +14,8 @@ dense=ks.layers.Dense
 def build_model(params_train,pk_train,params_test,pk_test,epochs,
         batch,validation,thres_acc,layers,neurons,dropout,dropout_rate,lr,activ):
     opt=ks.optimizers.Adam(learning_rate=lr)
-    es=EarlyStopping(monitor='acc',baseline=None,patience=20,verbose=0,min_delta=0.0001,mode='max',)
-    mc=ModelCheckpoint('cii_bestmodel',monitor='acc',save_best_only=True,verbose=1)
+    es=EarlyStopping(monitor='loss',baseline=None,patience=20,verbose=0,min_delta=0.0001,mode='min',)
+    mc=ModelCheckpoint('cii_bestmodel',monitor='loss',save_best_only=True,verbose=1)
     model.add(dense(2,input_dim=2,activation='relu'))
     #model.add(dense(28,activation='elu'))
     for i in range(layers):
@@ -23,7 +23,7 @@ def build_model(params_train,pk_train,params_test,pk_test,epochs,
     if dropout==True:
         model.add(ks.layers.Dropout(rate=dropout_rate))
     model.add(dense(len(pk_test[0]),activation='relu'))
-    model.compile(loss='mse',optimizer=opt,metrics=['acc'])
+    model.compile(loss='mse',optimizer=opt,metrics=target_mod)
     history=model.fit(params_train,pk_train,validation_split=validation,epochs=epochs,verbose=0,callbacks=[es,mc],batch_size=batch, shuffle=False)
     np.save("cii_history",history.history)
     ks.models.save_model(model,'cii_model.h5')

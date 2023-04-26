@@ -1,0 +1,228 @@
+2023-04-27 02:18:27.631982: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libcudart.so.11.0'; dlerror: libcudart.so.11.0: cannot open shared object file: No such file or directory
+2023-04-27 02:18:27.632042: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine.
+2023-04-27 02:18:29.811714: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libcuda.so.1'; dlerror: libcuda.so.1: cannot open shared object file: No such file or directory
+2023-04-27 02:18:29.811755: W tensorflow/stream_executor/cuda/cuda_driver.cc:269] failed call to cuInit: UNKNOWN ERROR (303)
+2023-04-27 02:18:29.811774: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (gandalf): /proc/driver/nvidia/version does not exist
+2023-04-27 02:18:29.812040: I tensorflow/core/platform/cpu_feature_guard.cc:151] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+
+ Power-spectrum test set saved to file. 
+
+
+ Parameters test set saved to file. 
+
+
+Epoch 1: loss improved from inf to 0.37511, saving model to cii_bestmodel
+2023-04-27 02:18:34.116578: W tensorflow/python/util/util.cc:368] Sets are not currently considered sequences, but this may change in the future, so consider avoiding using them.
+
+Epoch 2: loss improved from 0.37511 to 0.02562, saving model to cii_bestmodel
+
+Epoch 3: loss improved from 0.02562 to 0.02185, saving model to cii_bestmodel
+
+Epoch 4: loss improved from 0.02185 to 0.01967, saving model to cii_bestmodel
+
+Epoch 5: loss improved from 0.01967 to 0.01699, saving model to cii_bestmodel
+
+Epoch 6: loss improved from 0.01699 to 0.01553, saving model to cii_bestmodel
+
+Epoch 7: loss improved from 0.01553 to 0.01466, saving model to cii_bestmodel
+
+Epoch 8: loss improved from 0.01466 to 0.01456, saving model to cii_bestmodel
+
+Epoch 9: loss did not improve from 0.01456
+
+Epoch 10: loss did not improve from 0.01456
+
+Epoch 11: loss improved from 0.01456 to 0.01245, saving model to cii_bestmodel
+
+Epoch 12: loss improved from 0.01245 to 0.01219, saving model to cii_bestmodel
+
+Epoch 13: loss improved from 0.01219 to 0.01191, saving model to cii_bestmodel
+
+Epoch 14: loss improved from 0.01191 to 0.01187, saving model to cii_bestmodel
+
+Epoch 15: loss improved from 0.01187 to 0.01119, saving model to cii_bestmodel
+
+Epoch 16: loss improved from 0.01119 to 0.01033, saving model to cii_bestmodel
+
+Epoch 17: loss did not improve from 0.01033
+
+Epoch 18: loss did not improve from 0.01033
+
+Epoch 19: loss improved from 0.01033 to 0.01014, saving model to cii_bestmodel
+
+Epoch 20: loss improved from 0.01014 to 0.00983, saving model to cii_bestmodel
+
+Epoch 21: loss improved from 0.00983 to 0.00935, saving model to cii_bestmodel
+
+Epoch 22: loss did not improve from 0.00935
+
+Epoch 23: loss did not improve from 0.00935
+
+Epoch 24: loss improved from 0.00935 to 0.00917, saving model to cii_bestmodel
+
+Epoch 25: loss did not improve from 0.00917
+
+Epoch 26: loss improved from 0.00917 to 0.00848, saving model to cii_bestmodel
+
+Epoch 27: loss did not improve from 0.00848
+
+Epoch 28: loss improved from 0.00848 to 0.00840, saving model to cii_bestmodel
+
+Epoch 29: loss improved from 0.00840 to 0.00818, saving model to cii_bestmodel
+
+Epoch 30: loss did not improve from 0.00818
+
+Epoch 31: loss did not improve from 0.00818
+
+Epoch 32: loss improved from 0.00818 to 0.00814, saving model to cii_bestmodel
+
+Epoch 33: loss improved from 0.00814 to 0.00758, saving model to cii_bestmodel
+
+Epoch 34: loss did not improve from 0.00758
+
+Epoch 35: loss did not improve from 0.00758
+
+Epoch 36: loss did not improve from 0.00758
+
+Epoch 37: loss did not improve from 0.00758
+
+Epoch 38: loss did not improve from 0.00758
+
+Epoch 39: loss did not improve from 0.00758
+
+Epoch 40: loss did not improve from 0.00758
+
+Epoch 41: loss improved from 0.00758 to 0.00726, saving model to cii_bestmodel
+
+Epoch 42: loss did not improve from 0.00726
+
+Epoch 43: loss did not improve from 0.00726
+
+Epoch 44: loss did not improve from 0.00726
+
+Epoch 45: loss did not improve from 0.00726
+
+Epoch 46: loss did not improve from 0.00726
+
+Epoch 47: loss did not improve from 0.00726
+
+Epoch 48: loss did not improve from 0.00726
+
+Epoch 49: loss improved from 0.00726 to 0.00690, saving model to cii_bestmodel
+
+Epoch 50: loss did not improve from 0.00690
+
+Epoch 51: loss did not improve from 0.00690
+
+Epoch 52: loss did not improve from 0.00690
+
+Epoch 53: loss did not improve from 0.00690
+
+Epoch 54: loss improved from 0.00690 to 0.00666, saving model to cii_bestmodel
+
+Epoch 55: loss did not improve from 0.00666
+
+Epoch 56: loss did not improve from 0.00666
+
+Epoch 57: loss did not improve from 0.00666
+
+Epoch 58: loss did not improve from 0.00666
+
+Epoch 59: loss did not improve from 0.00666
+
+Epoch 60: loss did not improve from 0.00666
+
+Epoch 61: loss did not improve from 0.00666
+
+Epoch 62: loss improved from 0.00666 to 0.00661, saving model to cii_bestmodel
+
+Epoch 63: loss did not improve from 0.00661
+
+Epoch 64: loss did not improve from 0.00661
+
+Epoch 65: loss did not improve from 0.00661
+
+Epoch 66: loss did not improve from 0.00661
+
+Epoch 67: loss improved from 0.00661 to 0.00636, saving model to cii_bestmodel
+
+Epoch 68: loss did not improve from 0.00636
+
+Epoch 69: loss did not improve from 0.00636
+
+Epoch 70: loss did not improve from 0.00636
+
+Epoch 71: loss did not improve from 0.00636
+
+Epoch 72: loss did not improve from 0.00636
+
+Epoch 73: loss did not improve from 0.00636
+
+Epoch 74: loss did not improve from 0.00636
+
+Epoch 75: loss did not improve from 0.00636
+
+Epoch 76: loss did not improve from 0.00636
+
+Epoch 77: loss did not improve from 0.00636
+
+Epoch 78: loss did not improve from 0.00636
+
+Epoch 79: loss did not improve from 0.00636
+
+Epoch 80: loss did not improve from 0.00636
+
+Epoch 81: loss improved from 0.00636 to 0.00630, saving model to cii_bestmodel
+
+Epoch 82: loss did not improve from 0.00630
+
+Epoch 83: loss improved from 0.00630 to 0.00613, saving model to cii_bestmodel
+
+Epoch 84: loss did not improve from 0.00613
+
+Epoch 85: loss did not improve from 0.00613
+
+Epoch 86: loss did not improve from 0.00613
+
+Epoch 87: loss did not improve from 0.00613
+
+Epoch 88: loss did not improve from 0.00613
+
+Epoch 89: loss did not improve from 0.00613
+
+Epoch 90: loss did not improve from 0.00613
+
+Epoch 91: loss did not improve from 0.00613
+
+Epoch 92: loss did not improve from 0.00613
+
+Epoch 93: loss did not improve from 0.00613
+
+Epoch 94: loss did not improve from 0.00613
+
+Epoch 95: loss did not improve from 0.00613
+
+Epoch 96: loss did not improve from 0.00613
+
+Epoch 97: loss did not improve from 0.00613
+
+Epoch 98: loss did not improve from 0.00613
+
+Epoch 99: loss did not improve from 0.00613
+
+Epoch 100: loss did not improve from 0.00613
+
+Epoch 101: loss did not improve from 0.00613
+
+Epoch 102: loss did not improve from 0.00613
+
+Epoch 103: loss did not improve from 0.00613
+Training Accuracy is:  15.082530677318573 
+ Testing accuracy is:  0.2792108803987503
+
+ Training loss is:  2.274825982749462 
+ Testing loss is:  0.0007795872079441324
+Mean percentage error:  -1.8731363561046692
+
+ Predictions saved to file! 

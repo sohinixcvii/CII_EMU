@@ -19,7 +19,7 @@ from tensorflow import keras as ks
 import time
 from cosmoHammer.util import Params
 #peak, min., max., jump
-
+from ann_input import *
 # In[2]:
 
 
@@ -197,7 +197,8 @@ for el in par[:,0]:
 # i=input("Enter the index: ")
 i=[202]
 print("chosen values: ",params_test[i])
-samples=input("enter number of samples: ")
+#samples=input("enter number of samples: ")
+samples=2000
 samples=int(samples)
 for el in i:
     sampler=RunMCMC(prior=prior,data=fn_t[el],nbins=n,model='pk')

@@ -1,6 +1,6 @@
-2023-05-14 00:28:12,785 INFO:Using CosmoHammer 0.6.1
-2023-05-14 00:28:12,786 INFO:Using emcee 2.0.0
-2023-05-14 00:28:12,795 INFO:Sampler: <class 'cosmoHammer.CosmoHammerSampler.CosmoHammerSampler'>
+2023-05-14 02:20:06,114 INFO:Using CosmoHammer 0.6.1
+2023-05-14 02:20:06,114 INFO:Using emcee 2.0.0
+2023-05-14 02:20:06,115 INFO:Sampler: <class 'cosmoHammer.CosmoHammerSampler.CosmoHammerSampler'>
 configuration: 
   Params: [5.   1.58]
   Burnin iterations: 200.0
@@ -16,178 +16,12 @@ Core Modules:
 Likelihood Modules: 
   Likelihood_Module
 
-2023-05-14 00:28:12,795 INFO:start burn in
-2023-05-14 00:29:06,419 INFO:Iteration finished:10
-2023-05-14 00:29:46,173 INFO:Iteration finished:20
-2023-05-14 00:30:25,328 INFO:Iteration finished:30
-2023-05-14 00:30:57,308 INFO:Iteration finished:40
-2023-05-14 00:31:36,377 INFO:Iteration finished:50
-2023-05-14 00:32:13,891 INFO:Iteration finished:60
-2023-05-14 00:32:40,278 INFO:Iteration finished:70
-2023-05-14 00:33:27,675 INFO:Iteration finished:80
-2023-05-14 00:34:15,837 INFO:Iteration finished:90
-2023-05-14 00:34:58,655 INFO:Iteration finished:100
-2023-05-14 00:35:37,842 INFO:Iteration finished:110
-2023-05-14 00:36:22,452 INFO:Iteration finished:120
-2023-05-14 00:37:03,707 INFO:Iteration finished:130
-2023-05-14 00:37:50,739 INFO:Iteration finished:140
-2023-05-14 00:38:28,989 INFO:Iteration finished:150
-2023-05-14 00:39:11,846 INFO:Iteration finished:160
-2023-05-14 00:39:50,444 INFO:Iteration finished:170
-2023-05-14 00:40:28,123 INFO:Iteration finished:180
-2023-05-14 00:41:13,405 INFO:Iteration finished:190
-2023-05-14 00:41:53,275 INFO:Iteration finished:200
-2023-05-14 00:41:53,275 INFO:storing random state
-2023-05-14 00:41:53,280 INFO:burn in sampling done! Took: 820.4843s
-2023-05-14 00:41:53,280 INFO:Mean acceptance fraction for burn in:0.71
-2023-05-14 00:41:53,280 INFO:Reseting emcee sampler
-2023-05-14 00:41:53,280 INFO:start sampling after burn in
-2023-05-14 00:42:24,063 INFO:Iteration finished:10
-2023-05-14 00:43:02,120 INFO:Iteration finished:20
-2023-05-14 00:43:39,825 INFO:Iteration finished:30
-2023-05-14 00:44:21,643 INFO:Iteration finished:40
-2023-05-14 00:44:54,903 INFO:Iteration finished:50
-2023-05-14 00:45:33,918 INFO:Iteration finished:60
-2023-05-14 00:46:12,395 INFO:Iteration finished:70
-2023-05-14 00:46:51,705 INFO:Iteration finished:80
-2023-05-14 00:47:26,699 INFO:Iteration finished:90
-2023-05-14 00:48:03,743 INFO:Iteration finished:100
-2023-05-14 00:48:52,969 INFO:Iteration finished:110
-2023-05-14 00:49:44,783 INFO:Iteration finished:120
-2023-05-14 00:50:26,075 INFO:Iteration finished:130
-2023-05-14 00:51:14,406 INFO:Iteration finished:140
-2023-05-14 00:51:51,580 INFO:Iteration finished:150
-2023-05-14 00:52:27,718 INFO:Iteration finished:160
-2023-05-14 00:53:08,148 INFO:Iteration finished:170
-2023-05-14 00:53:50,019 INFO:Iteration finished:180
-2023-05-14 00:54:25,697 INFO:Iteration finished:190
-2023-05-14 00:55:02,862 INFO:Iteration finished:200
-2023-05-14 00:55:45,345 INFO:Iteration finished:210
-2023-05-14 00:56:22,767 INFO:Iteration finished:220
-2023-05-14 00:57:01,361 INFO:Iteration finished:230
-2023-05-14 00:57:23,546 INFO:Iteration finished:240
-2023-05-14 00:58:09,176 INFO:Iteration finished:250
-2023-05-14 00:58:44,097 INFO:Iteration finished:260
-2023-05-14 00:59:25,090 INFO:Iteration finished:270
-2023-05-14 01:00:08,797 INFO:Iteration finished:280
-2023-05-14 01:00:42,450 INFO:Iteration finished:290
-2023-05-14 01:01:22,344 INFO:Iteration finished:300
-2023-05-14 01:01:50,857 INFO:Iteration finished:310
-2023-05-14 01:02:34,579 INFO:Iteration finished:320
-2023-05-14 01:03:19,973 INFO:Iteration finished:330
-2023-05-14 01:03:53,839 INFO:Iteration finished:340
-2023-05-14 01:04:31,428 INFO:Iteration finished:350
-2023-05-14 01:05:09,479 INFO:Iteration finished:360
-2023-05-14 01:05:41,775 INFO:Iteration finished:370
-2023-05-14 01:06:06,483 INFO:Iteration finished:380
-2023-05-14 01:06:43,040 INFO:Iteration finished:390
-2023-05-14 01:07:16,069 INFO:Iteration finished:400
-2023-05-14 01:07:49,638 INFO:Iteration finished:410
-2023-05-14 01:08:21,553 INFO:Iteration finished:420
-2023-05-14 01:08:59,900 INFO:Iteration finished:430
-2023-05-14 01:09:34,700 INFO:Iteration finished:440
-2023-05-14 01:10:09,079 INFO:Iteration finished:450
-2023-05-14 01:10:45,552 INFO:Iteration finished:460
-2023-05-14 01:11:21,597 INFO:Iteration finished:470
-2023-05-14 01:11:55,850 INFO:Iteration finished:480
-2023-05-14 01:12:30,863 INFO:Iteration finished:490
-2023-05-14 01:13:12,681 INFO:Iteration finished:500
-2023-05-14 01:13:45,133 INFO:Iteration finished:510
-2023-05-14 01:14:14,092 INFO:Iteration finished:520
-2023-05-14 01:14:40,918 INFO:Iteration finished:530
-2023-05-14 01:15:09,938 INFO:Iteration finished:540
-2023-05-14 01:15:44,609 INFO:Iteration finished:550
-2023-05-14 01:16:17,666 INFO:Iteration finished:560
-2023-05-14 01:16:46,768 INFO:Iteration finished:570
-2023-05-14 01:17:22,576 INFO:Iteration finished:580
-2023-05-14 01:17:59,824 INFO:Iteration finished:590
-2023-05-14 01:18:40,567 INFO:Iteration finished:600
-2023-05-14 01:19:17,210 INFO:Iteration finished:610
-2023-05-14 01:19:52,587 INFO:Iteration finished:620
-2023-05-14 01:20:27,422 INFO:Iteration finished:630
-2023-05-14 01:20:59,238 INFO:Iteration finished:640
-2023-05-14 01:21:39,920 INFO:Iteration finished:650
-2023-05-14 01:22:13,989 INFO:Iteration finished:660
-2023-05-14 01:22:44,818 INFO:Iteration finished:670
-2023-05-14 01:23:20,011 INFO:Iteration finished:680
-2023-05-14 01:23:55,734 INFO:Iteration finished:690
-2023-05-14 01:24:24,628 INFO:Iteration finished:700
-2023-05-14 01:24:56,714 INFO:Iteration finished:710
-2023-05-14 01:25:32,256 INFO:Iteration finished:720
-2023-05-14 01:26:11,661 INFO:Iteration finished:730
-2023-05-14 01:26:51,429 INFO:Iteration finished:740
-2023-05-14 01:27:17,646 INFO:Iteration finished:750
-2023-05-14 01:27:53,240 INFO:Iteration finished:760
-2023-05-14 01:28:25,409 INFO:Iteration finished:770
-2023-05-14 01:29:00,880 INFO:Iteration finished:780
-2023-05-14 01:29:34,215 INFO:Iteration finished:790
-2023-05-14 01:30:08,271 INFO:Iteration finished:800
-2023-05-14 01:30:43,077 INFO:Iteration finished:810
-2023-05-14 01:31:12,231 INFO:Iteration finished:820
-2023-05-14 01:31:38,226 INFO:Iteration finished:830
-2023-05-14 01:32:15,453 INFO:Iteration finished:840
-2023-05-14 01:32:48,120 INFO:Iteration finished:850
-2023-05-14 01:33:21,409 INFO:Iteration finished:860
-2023-05-14 01:33:53,563 INFO:Iteration finished:870
-2023-05-14 01:34:23,096 INFO:Iteration finished:880
-2023-05-14 01:35:00,064 INFO:Iteration finished:890
-2023-05-14 01:35:37,159 INFO:Iteration finished:900
-2023-05-14 01:36:07,455 INFO:Iteration finished:910
-2023-05-14 01:36:39,392 INFO:Iteration finished:920
-2023-05-14 01:37:12,370 INFO:Iteration finished:930
-2023-05-14 01:37:40,470 INFO:Iteration finished:940
-2023-05-14 01:38:12,449 INFO:Iteration finished:950
-2023-05-14 01:38:42,391 INFO:Iteration finished:960
-2023-05-14 01:39:18,792 INFO:Iteration finished:970
-2023-05-14 01:40:03,473 INFO:Iteration finished:980
-2023-05-14 01:40:40,942 INFO:Iteration finished:990
-2023-05-14 01:41:13,279 INFO:Iteration finished:1000
-2023-05-14 01:41:42,539 INFO:Iteration finished:1010
-2023-05-14 01:42:07,236 INFO:Iteration finished:1020
-2023-05-14 01:42:33,520 INFO:Iteration finished:1030
-2023-05-14 01:43:12,245 INFO:Iteration finished:1040
-2023-05-14 01:43:59,268 INFO:Iteration finished:1050
-2023-05-14 01:44:37,335 INFO:Iteration finished:1060
-2023-05-14 01:45:05,821 INFO:Iteration finished:1070
-2023-05-14 01:45:41,527 INFO:Iteration finished:1080
-2023-05-14 01:46:18,754 INFO:Iteration finished:1090
-2023-05-14 01:46:54,951 INFO:Iteration finished:1100
-2023-05-14 01:47:29,273 INFO:Iteration finished:1110
-2023-05-14 01:48:10,426 INFO:Iteration finished:1120
-2023-05-14 01:48:59,486 INFO:Iteration finished:1130
-2023-05-14 01:49:33,638 INFO:Iteration finished:1140
-2023-05-14 01:50:12,440 INFO:Iteration finished:1150
-2023-05-14 01:51:00,203 INFO:Iteration finished:1160
-2023-05-14 01:51:40,636 INFO:Iteration finished:1170
-2023-05-14 01:52:13,367 INFO:Iteration finished:1180
-2023-05-14 01:52:45,354 INFO:Iteration finished:1190
-2023-05-14 01:53:09,477 INFO:Iteration finished:1200
-2023-05-14 01:53:44,548 INFO:Iteration finished:1210
-2023-05-14 01:54:15,170 INFO:Iteration finished:1220
-2023-05-14 01:54:53,165 INFO:Iteration finished:1230
-2023-05-14 01:55:22,286 INFO:Iteration finished:1240
-2023-05-14 01:55:55,120 INFO:Iteration finished:1250
-2023-05-14 01:56:32,350 INFO:Iteration finished:1260
-2023-05-14 01:57:10,826 INFO:Iteration finished:1270
-2023-05-14 01:57:44,575 INFO:Iteration finished:1280
-2023-05-14 01:58:23,111 INFO:Iteration finished:1290
-2023-05-14 01:59:02,119 INFO:Iteration finished:1300
-2023-05-14 01:59:36,571 INFO:Iteration finished:1310
-2023-05-14 02:00:07,351 INFO:Iteration finished:1320
-2023-05-14 02:00:38,628 INFO:Iteration finished:1330
-2023-05-14 02:01:07,083 INFO:Iteration finished:1340
-2023-05-14 02:01:35,472 INFO:Iteration finished:1350
-2023-05-14 02:02:19,717 INFO:Iteration finished:1360
-2023-05-14 02:02:56,993 INFO:Iteration finished:1370
-2023-05-14 02:03:34,004 INFO:Iteration finished:1380
-2023-05-14 02:04:13,810 INFO:Iteration finished:1390
-2023-05-14 02:04:59,499 INFO:Iteration finished:1400
-2023-05-14 02:05:49,730 INFO:Iteration finished:1410
-2023-05-14 02:06:30,923 INFO:Iteration finished:1420
-2023-05-14 02:07:14,011 INFO:Iteration finished:1430
-2023-05-14 02:07:56,822 INFO:Iteration finished:1440
-2023-05-14 02:08:38,621 INFO:Iteration finished:1450
-2023-05-14 02:09:26,236 INFO:Iteration finished:1460
-2023-05-14 02:10:10,225 INFO:Iteration finished:1470
-2023-05-14 02:10:46,568 INFO:Iteration finished:1480
-2023-05-14 02:11:18,941 INFO:Iteration finished:1490
+2023-05-14 02:20:06,115 INFO:start burn in
+2023-05-14 02:20:26,631 INFO:Iteration finished:10
+2023-05-14 02:20:44,931 INFO:Iteration finished:20
+2023-05-14 02:21:03,185 INFO:Iteration finished:30
+2023-05-14 02:21:21,358 INFO:Iteration finished:40
+2023-05-14 02:21:39,692 INFO:Iteration finished:50
+2023-05-14 02:21:57,629 INFO:Iteration finished:60
+2023-05-14 02:22:14,250 INFO:Iteration finished:70
+2023-05-14 02:22:29,184 INFO:Iteration finished:80

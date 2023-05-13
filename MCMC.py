@@ -195,7 +195,7 @@ class RunMCMC:
 
 
 
-dpk=np.loadtxt('data/pk_test')
+pk_test=np.loadtxt('data/pk_test')
 # fn_t=np.log(dpk)/10
 n=np.loadtxt('data/nbins.txt')
 #n=n[[0,1,2,3]]
@@ -217,12 +217,12 @@ for el in par[:,0]:
 # # print(params_test)
 # i=input("Enter the index: ")
 i=[202]
-print("chosen values: ",params_test[i], "\n Chosen pk",fn_t[i])
+print("chosen values: ",params_test[i], "\n Chosen pk",pk_test[i])
 #samples=input("enter number of samples: ")
 samples=2000
 samples=int(samples)
 for el in i:
-    sampler=RunMCMC(prior=prior,data=fn_t[el],nbins=n,model='pk')
+    sampler=RunMCMC(prior=prior,data=pk_test[el],nbins=n,model='pk')
     sampler.load_model()
     sampler.sampler(walker_ratio=2,burnin=0.1*samples,samples=samples,num=el)
 

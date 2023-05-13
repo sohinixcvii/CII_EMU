@@ -14,22 +14,28 @@ from ann_input import *
 import math
 pi=math.pi
 
-npk=np.loadtxt(npk_p,usecols=(2,3,4,5,6,7))
+dpk=np.loadtxt(npk_p)
 k = np.loadtxt(k_p)
 nbins = np.loadtxt(n_p)
 params=np.loadtxt(path+'params_t')
 
 
-dpk=np.empty(np.shape(npk))
-for i in range(len(npk)):
-    for j in range(len(npk[0])):
-        dpk[i,j]=((k[j]**3)*npk[i,j])/(2*pi**2)
-pk=np.log(npk)/10
+# dpk=np.empty(np.shape(npk))
+# for i in range(len(npk)):
+#     for j in range(len(npk[0])):
+#         dpk[i,j]=((k[j]**3)*npk[i,j])/(2*pi**2)
+pk=np.log(dpk)/10
 
 #splitting data set into training set and test set
 params_train,params_test,pk_train,pk_test = sm.train_test_split(params,pk, test_size=0.1, random_state=10,shuffle=False)
-fn.save_to_file(pk_test,'pk_test')
-fn.save_to_file(params_test,'params_test')
+pk_fn = open('pk_test', 'w+')
+params_fn = open('params_test', 'w+')
+
+np.savetxt(pk_fn, pk_array)
+np.savetxt(params_fn, params_array)
+
+pk_fn.close()
+params_fn.close()
 
 
 #building and training the model

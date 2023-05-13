@@ -21,7 +21,9 @@ from cosmoHammer.util import Params
 #peak, min., max., jump
 from ann_input import *
 # In[2]:
+import math
 
+pi=math.pi
 
 import os
 
@@ -39,11 +41,14 @@ mh=np.mean(par[:,0])
 
 ms=np.std(par[:,0])
 
-
 # In[16]:
 def tr(p):
     y=((p-[mh,0])/[ms,1])/4
     return y
+
+def inv_tr(p):
+    x=4*np.multiply([ms,1],p)+[mh,0]
+    return x
 
 class Core_Module(object):
     def __init__(self,model_name):
@@ -76,7 +81,10 @@ class Likelihood_Module(object):
     def __init__(self,data,nbins):
         self.data= data
         noise=(data/np.sqrt(nbins))
-        eye = np.eye(len(data))
+        try:
+            eye = np.eye(len(data))
+        except:
+            eye=np.eye(1)
         if np.sum(nbins) != 0.:
             cov = abs(data ** 2) / nbins
             cov = cov + np.abs(noise)
@@ -91,7 +99,18 @@ class Likelihood_Module(object):
         self.div = 1.0
         self.cov = cov
         self.cov_inv = cov_inv
-
+    
+    #chi-square likelihood
+    # def computeLikelihood(self,ctx):
+    #     model_th=ctx.get('model_th')
+    #     #RAGHU# in our case model PS will be estimated using the emulator.
+    #     # the likelihood is sum of the lot of normal distributions
+    #     eps = self.cov
+    #     denom = power(eps,2)
+    #     lp = -0.5*sum(power((self.data - model_th),2)/denom + log(denom) + log(2*pi))
+    #     return lp
+    
+    #original likelihood
     def computeLikelihood(self,ctx):
         model_th=ctx.get('model_th')
         diff=np.subtract(model_th,self.data).reshape(1,len(self.data))
@@ -176,17 +195,19 @@ class RunMCMC:
 
 
 
-dpk=np.loadtxt('data/cii_dpk')
-fn_t=np.log(dpk)/15
+dpk=np.loadtxt('data/pk_test')
+# fn_t=np.log(dpk)/10
 n=np.loadtxt('data/nbins.txt')
-n=n[[0,1,2,3]]
-params_test=np.loadtxt('data/params_t')
+#n=n[[0,1,2,3]]
+params_test=np.loadtxt('data/params_test')
 ind=[]
 i=0
+'''
 for el in par[:,0]:
     if el>1.0 and el<6.0:
         ind.append(i)
     i+=1
+'''
 #ind=np.where(par[:,0]<6.0)
 # # i=np.random.randint(low=0,high=len(params_test),size=24)
 #i=np.random.choice(ind)
@@ -196,7 +217,7 @@ for el in par[:,0]:
 # # print(params_test)
 # i=input("Enter the index: ")
 i=[202]
-print("chosen values: ",params_test[i])
+print("chosen values: ",params_test[i], "\n Chosen pk",fn_t[i])
 #samples=input("enter number of samples: ")
 samples=2000
 samples=int(samples)
@@ -208,27 +229,27 @@ for el in i:
 
 # In[3]:
 
-# import numpy as np
-# from chainconsumer import ChainConsumer
-# import matplotlib.pyplot as plt
-# import matplotlib as mpl
-# mpl.rcParams['figure.facecolor']='white'
-#
-# data=np.loadtxt('pk'+str(i)+'.out') #sample saved with name 'model num.out'
-#
-# truth = params_test[i]
-#
-# c = ChainConsumer()
-# c.add_chain(data[:,0], parameters=[r"$M_{(h, {\rm min})}(\rm 10^{10} M_\odot)$"],
-#                 name='CV+Noise',color='#F28482')
-# c.configure(label_font_size=18,linestyles='-',linewidths=2, tick_font_size=18,shade_alpha=1, )
-# c.configure_truth(color='k', ls=":", lw=1.5)
-# # plt.text(56.1,200,'truth: '+'{:.2f}'.format(truth[0])+'\n walkers: 4 \n samples: 1000 \n step size: 0.01',fontsize=10,bbox={'facecolor': 'white', 'alpha': 0.5, 'pad': 5})
-#
-# fig = c.plotter.plot(truth=truth)
-# fig.set_size_inches(5 + fig.get_size_inches())
-# plt.savefig('plot_'+'{:.2f}'.format(truth[0])+'_emulated.png',bbox_inches='tight',dpi=300)
+import numpy as np
+from chainconsumer import ChainConsumer
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+mpl.rcParams['figure.facecolor']='white'
+i=202
+params_test=np.loadtxt("params_test")
+data=np.loadtxt('pk'+str(i)+'.out') #sample saved with name 'model num.out'
 
+truth = [params_test[i][0]]
+
+c = ChainConsumer()
+c.add_chain(data[:,0], parameters=[r"$M_{(h, {\rm min})}(\rm 10^{10} M_\odot)$"],
+                name='CV+Noise',color='#F28482')
+c.configure(label_font_size=18,linestyles='-',linewidths=2, tick_font_size=18,shade_alpha=1, )
+c.configure_truth(color='k', ls=":", lw=1.5)
+# plt.text(56.1,200,'truth: '+'{:.2f}'.format(truth[0])+'\n walkers: 4 \n samples: 1000 \n step size: 0.01',fontsize=10,bbox={'facecolor': 'white', 'alpha': 0.5, 'pad': 5})
+
+fig = c.plotter.plot(truth=truth)
+fig.set_size_inches(5 + fig.get_size_inches())
+plt.savefig('plot_'+'{:.2f}'.format(truth[0])+'_emulated.png',bbox_inches='tight',dpi=300)
 
 # In[4]:
 

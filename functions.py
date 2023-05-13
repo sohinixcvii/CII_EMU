@@ -22,7 +22,7 @@ def build_model(params_train,pk_train,params_test,pk_test,epochs,
         model.add(dense(neurons,activation=activ))
     if dropout==True:
         model.add(ks.layers.Dropout(rate=dropout_rate))
-    model.add(dense(len(pk_test[0]),activation='relu'))
+    model.add(dense(len(pk_test[0]),activation='linear'))
     model.compile(loss='mse',optimizer=opt,metrics=target_mod)
     history=model.fit(params_train,pk_train,validation_split=validation,epochs=epochs,verbose=0,callbacks=[es,mc],batch_size=batch, shuffle=False)
     np.save("cii_history",history.history)
@@ -31,7 +31,7 @@ def build_model(params_train,pk_train,params_test,pk_test,epochs,
     train_acc=model.evaluate(params_train,pk_train,verbose=0)
     test_acc=model.evaluate(params_test,pk_test,verbose=0)
     print("Training Accuracy is: ",train_acc[1]*100,"\n Testing accuracy is: ", test_acc[1]*100)
-    print("\n Training loss is: ",train_acc[0]*100,"\n Testing loss is: ",test_acc[0]*100)
+    print("Training loss is: ",train_acc[0]*100,"\n Testing loss is: ",test_acc[0]*100)
     # make class predictions with the model
     predictions = model.predict(params_test)
 

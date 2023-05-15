@@ -21,9 +21,9 @@ from cosmoHammer.util import Params
 #peak, min., max., jump
 from ann_input import *
 # In[2]:
-import math
+from math import *
 
-pi=math.pi
+#pi=math.pi
 
 import os
 
@@ -33,7 +33,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 # In[10]:
 
 
-prior= Params(('Mhmin',[5.0,0.0730406,18.0,0.00730406]),
+prior= Params(('Mhmin',[5.0,0.0730406,158.2789802,0.00730406]),
               ('alpha', [1.58,1.58,1.58,0]))
 err=np.loadtxt('data/cii_er')
 par=np.loadtxt('data/params_LH.txt')
@@ -64,7 +64,7 @@ class Core_Module(object):
         model = ks.models.load_model('cii_model.h5')
 
         model_th=model.predict(params)
-        model_th=np.exp(10*model_th)
+        # model_th=np.exp(10*model_th)
 
         ctx.add("model_th",model_th)
 
@@ -106,8 +106,8 @@ class Likelihood_Module(object):
     #     #RAGHU# in our case model PS will be estimated using the emulator.
     #     # the likelihood is sum of the lot of normal distributions
     #     eps = self.cov
-    #     denom = power(eps,2)
-    #     lp = -0.5*sum(power((self.data - model_th),2)/denom + log(denom) + log(2*pi))
+    #     denom = np.power(eps,2)
+    #     lp = -0.5*sum(np.divide(np.power((self.data - model_th),2),denom))
     #     return lp
     
     #original likelihood
@@ -219,7 +219,7 @@ for el in par[:,0]:
 i=[202]
 print("chosen values: ",params_test[i], "\n Chosen pk",pk_test[i])
 #samples=input("enter number of samples: ")
-samples=2000
+samples=10000
 samples=int(samples)
 for el in i:
     sampler=RunMCMC(prior=prior,data=pk_test[el],nbins=n,model='pk')
@@ -235,7 +235,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 mpl.rcParams['figure.facecolor']='white'
 i=202
-params_test=np.loadtxt("params_test")
+params_test=np.loadtxt("data/params_test")
 data=np.loadtxt('pk'+str(i)+'.out') #sample saved with name 'model num.out'
 
 truth = [params_test[i][0]]

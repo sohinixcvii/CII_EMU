@@ -28,8 +28,8 @@ pk=np.log(dpk)/10
 
 #splitting data set into training set and test set
 params_train,params_test,pk_train,pk_test = sm.train_test_split(params,pk, test_size=0.1, random_state=10,shuffle=False)
-pk_fn = open('data/pk_test', 'w+')
-params_fn = open('data/params_test', 'w+')
+pk_fn = open('pk_test', 'w+')
+params_fn = open('params_test', 'w+')
 
 np.savetxt(pk_fn, pk_array)
 np.savetxt(params_fn, params_array)
@@ -52,4 +52,4 @@ err=(pred-pk_test)/pk_test
 print("Mean percentage error: ", 100*np.mean(err))
 
 #saving predictions to file
-fn.save_to_file(pred,'data/predictions')
+fn.save_to_file(pred,'predictions')

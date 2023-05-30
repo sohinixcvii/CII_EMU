@@ -1,0 +1,3 @@
+Model file details:
+
+1. cii_model_v0.h5: params_transform done using tr() and inv_tr() functions, log(dpk)/10 used for pk. NRMSE: 0.0071414379947163445 R2: 0.9780879658572692

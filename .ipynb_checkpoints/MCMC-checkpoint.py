@@ -36,7 +36,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 # In[10]:
 
-
+noise=np.loadtxt('data/noise')
 prior= Params(('Mhmin',[5.0,0.0730406,158.2789802,0.00730406]),
               ('alpha', [1.58,1.58,1.58,0]))
 err=np.loadtxt('data/cii_er')
@@ -82,21 +82,20 @@ class Core_Module(object):
 
 
 class Likelihood_Module(object):
-    def __init__(self,data,nbins):
+    def __init__(self,data,nbins,noise):
         self.data= data
-        noise=(data/np.sqrt(nbins))
         try:
             eye = np.eye(len(data))
         except:
             eye=np.eye(1)
         if np.sum(nbins) != 0.:
-            cov = abs(data ** 2) / nbins
-            cov = cov + np.abs(noise)
+            cov = abs(data**2) / nbins
+            cov = cov + np.abs(noise**2)
             cov = eye * cov
             cov_inv = np.linalg.inv(cov)
 
         else:
-            cov = np.abs(noise)
+            cov = np.abs(data/np.sqrt(nbins))+noise
             cov = eye * cov
             cov_inv = np.linalg.inv(cov)
 
@@ -154,7 +153,7 @@ class RunMCMC:
         chain = LikelihoodComputationChain(min=self.params[:, 1], max=self.params[:, 2])
         chain.params = prior
         if like_func == 'n':
-            chain.addLikelihoodModule(Likelihood_Module(data,nbins))
+            chain.addLikelihoodModule(Likelihood_Module(data,nbins,noise))
         else:
             chain.addLikelihoodModule(ComplexLikeModule(data, nbins, noise, div))
         self.chain = chain
@@ -211,28 +210,29 @@ pk_test=np.loadtxt('data/cii_dpk')
 n=np.loadtxt('data/nbins.txt')
 params_test=np.loadtxt('data/params_LH.txt')
 
-i=np.random.randint(low=0,high=len(params_test),size=2)
+#i=np.random.randint(low=0,high=len(params_test),size=2)
+i=[83,183,202]
 fn_t=pk_test[i]
 
 print("Chosen  indices: ",i)
 print("chosen values: ",params_test[i], "\n Chosen pk",pk_test[i])
 
-samples=100
+samples=10000
+w=2
 
 for el in range(len(i)):
     st=time.time()
-    sampler=RunMCMC(prior=prior,data=fn_t[el],nbins=n,model='pk')
+    sampler=RunMCMC(prior=prior,data=fn_t[el],nbins=n,noise=noise,model='noise')
     sampler.load_model()
-    sampler.sampler(walker_ratio=2,burnin=0.1*samples,samples=samples,num=i[el])
+    sampler.sampler(walker_ratio=w,burnin=0.1*samples,samples=samples,num=i[el])
     tt=time.time()-st
     print("Time taken for ",i[el],time.strftime("%H-%M-%S",time.gmtime(tt)))
-    break
 
 #plotting the results
 for el in range(len(i)):
     data=np.loadtxt('pk'+str(i[el])+'.out') #sample saved with name 'model num.out'
 
-    truth = [params_test[i[el][0]]]
+    truth = [params_test[i[el],0]]
 
     c = ChainConsumer()
     c.add_chain(data[:,0], parameters=[r"$M_{(h, {\rm min})}(\rm 10^{10} M_\odot)$"],

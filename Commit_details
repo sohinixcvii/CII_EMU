@@ -8,7 +8,3 @@ COMMIT DETAILS
 4. Emulator being optimized on mse loss
 5. Final activation functionw was relu that was causing emulator to approximate everything to 1. Changed to linear to enable continous value prediction
 6. MCMC module now contains chi-square likelihood function in addition to gaussian
-
-30-5-2023
-1. Latest model file updated
-2. Results from latest MCMC runs updated (along with plots)

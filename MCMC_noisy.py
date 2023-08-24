@@ -41,6 +41,7 @@ prior= Params(('Mhmin',[5.0,0.0730406,158.2789802,0.00730406]),
               ('alpha', [1.58,1.58,1.58,0]))
 err=np.loadtxt('data/cii_er')
 par=np.loadtxt('data/params_LH.txt')
+noise=np.loadtxt('data/noise')
 mh=np.mean(par[:,0])
 
 ms=np.std(par[:,0])
@@ -140,7 +141,7 @@ class Likelihood_Module(object):
 class RunMCMC:
     """ sampler & MPI sampler class """
 
-    def __init__(self, prior, data, nbins, model, noise=0., div=1.0, like_func='n'):
+    def __init__(self, prior, data, nbins, model, noise=0, div=1.0, like_func='n'):
         """
         :param data: load your data
         :param nbins: number of k-modes in powerspectrum OR
@@ -230,7 +231,7 @@ for el in range(len(i)):
 
 #plotting the results
 for el in range(len(i)):
-    data=np.loadtxt('pk'+str(i[el])+'.out') #sample saved with name 'model num.out'
+    data=np.loadtxt('noisy'+str(i[el])+'.out') #sample saved with name 'model num.out'
 
     truth = [params_test[i[el][0]]]
 

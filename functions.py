@@ -27,7 +27,6 @@ def build_model(params_train,pk_train,params_test,pk_test,epochs,
     history=model.fit(params_train,pk_train,validation_split=validation,epochs=epochs,verbose=0,callbacks=[es,mc],batch_size=batch, shuffle=False)
     np.save("cii_history",history.history)
     ks.models.save_model(model,'cii_model.h5')
-    # lm=ks.models.load_model('k0_model.h5')
     train_acc=model.evaluate(params_train,pk_train,verbose=0)
     test_acc=model.evaluate(params_test,pk_test,verbose=0)
     print("Training Accuracy is: ",train_acc[1]*100,"\n Testing accuracy is: ", test_acc[1]*100)
@@ -103,6 +102,14 @@ def history_plot(history):
     #plt.ylim(0, np.max(history.item().get('val_loss'))+10)
     #plt.xlim(0,len(history.item().get('val_loss'))+10)
     plt.xlabel(r'$\rm Epochs$', size=18, color='k')
-    plt.legend([r'$\rm Training$', r'$\rm Validation$'], loc='best', prop={'size': 20}, labelcolor='k')
-    plt.savefig('accuracy_vs_loss.png', bbox_inches='tight', dpi=300)
-    print('Successfully saved the figure at current location')
+
+''' tranformation and inverse tranformation functions used in MCMC files   
+def tr(p):
+    y=((p-[mh,0])/[ms,1])/4
+    return y
+
+def inv_tr(p):
+    x=4*np.multiply([ms,1],p)+[mh,0]
+    return x
+
+'''

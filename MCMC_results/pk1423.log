@@ -1,0 +1,19 @@
+2023-08-07 20:39:58,043 INFO:Using CosmoHammer 0.6.1
+2023-08-07 20:39:58,043 INFO:Using emcee 3.1.4
+2023-08-07 20:39:58,044 INFO:Sampler: <class 'cosmoHammer.CosmoHammerSampler.CosmoHammerSampler'>
+configuration: 
+  Params: [5.   1.58]
+  Burnin iterations: 10.0
+  Samples iterations: 100
+  Walkers ratio: 2
+  Reusing burn in: False
+  init pos generator: SampleBallPositionGenerator
+  stop criteria: IterationStopCriteriaStrategy
+  storage util: SampleFileUtil
+likelihoodComputationChain: 
+Core Modules: 
+  Core_Module
+Likelihood Modules: 
+  Likelihood_Module
+
+2023-08-07 20:39:58,044 INFO:start burn in

@@ -1,0 +1,48 @@
+Hyperparameters used:
+layers= 32
+neurons= 144
+dropout= True
+epochs= 1000
+batch= 4
+thres_acc= 0.99
+activation= 'relu'
+dropout_rate= 0.1
+learning_rate= 9.9999999e-05
+loss= 'mse'
+trained on loss metric
+early stopping patience: 20
+
+
+Parameter preprocessing:
+par=np.loadtxt('data/params_LH.txt')
+mh=np.mean(par[:,0])
+
+ms=np.std(par[:,0])
+def tr(p):
+    y=((p-[mh,0])/[ms,1])/4
+    return y
+	
+PK preprocessing: log(dpk)/10
+
+Likelihood function used:
+def computeLikelihood(self,ctx):
+        model_th=ctx.get('model_th')
+        diff=np.subtract(model_th,self.data).reshape(1,len(self.data))
+        logl=-np.dot(diff,np.dot(self.cov_inv,diff.T))/2.
+        return logl
+
+Performance scores:
+Mean percentage error: 2.74%
+R2 Score: 0.9708
+NRMSE: 0.0101
+
+File descriptions:
+1. cii_dpk= dimensionless power spectrum
+2. cii_model.h5= Final CII model
+3. k.txt= kmodes used in training the model
+4. Model_perf_checks_CII.ipynb= notebook that checks model performance and plots comparison graphs
+5. nbins.txt= number of samples corresponding to each kmode
+6. params_t= transformed (according to previously mentioned rule) parameter set
+7. pk_test= test set used to train the model
+8. predictions= predictions (corresponding to test set)
+9. params_test= parameters of the test set

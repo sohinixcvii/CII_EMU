@@ -1,0 +1,79 @@
+Tuner config: 
+ 	 Number of trials:  100 
+ 	 Number of epochs per trial:  20
+Shape of k:  (6,) Shape of nbins:  (6,) Shape of dpk:  (2167, 6)
+Results summary
+Results in tuning_results/acc_mod
+Showing 10 best trials
+<keras_tuner.engine.objective.Objective object at 0x7f194f417c70>
+Trial summary
+Hyperparameters:
+num_layers: 2
+units: 16
+activation: softmax
+lr: 0.01
+Score: 0.0002213520638179034
+Trial summary
+Hyperparameters:
+num_layers: 2
+units: 16
+activation: relu
+lr: 0.01
+Score: 0.00037844699788062525
+Trial summary
+Hyperparameters:
+num_layers: 15
+units: 16
+activation: elu
+lr: 0.00023703295134403656
+Score: 0.0007555554426896075
+Trial summary
+Hyperparameters:
+num_layers: 2
+units: 512
+activation: linear
+lr: 0.01
+Score: 0.0007878063867489497
+Trial summary
+Hyperparameters:
+num_layers: 17
+units: 268
+activation: elu
+lr: 0.002317305384758049
+Score: 0.0008049689931795001
+Trial summary
+Hyperparameters:
+num_layers: 2
+units: 512
+activation: linear
+lr: 0.01
+Score: 0.000816717375225077
+Trial summary
+Hyperparameters:
+num_layers: 2
+units: 464
+activation: linear
+lr: 0.01
+Score: 0.0008224797202274203
+Trial summary
+Hyperparameters:
+num_layers: 2
+units: 512
+activation: linear
+lr: 0.01
+Score: 0.0009289575197423497
+Trial summary
+Hyperparameters:
+num_layers: 2
+units: 512
+activation: linear
+lr: 0.01
+Score: 0.0012829689658246934
+Trial summary
+Hyperparameters:
+num_layers: 2
+units: 512
+activation: linear
+lr: 0.01
+Score: 0.0013873895125774045
+Total time taken:  01-22-55

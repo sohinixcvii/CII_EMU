@@ -1,0 +1,99 @@
+Tuner config: 
+ 	 Number of trials:  100 
+ 	 Number of epochs per trial:  20
+Shape of k:  (6,) Shape of nbins:  (6,) Shape of dpk:  (2167, 6)
+Results summary
+Results in tuning_results/acc_mse_mod
+Showing 10 best trials
+<keras_tuner.engine.objective.Objective object at 0x7f4c9bb13be0>
+Trial summary
+Hyperparameters:
+num_layers: 2
+units: 16
+activation: linear
+dropout rate: 0.2691322747497967
+dropout: True
+lr: 0.1
+Score: 0.0015644252998754382
+Trial summary
+Hyperparameters:
+num_layers: 2
+units: 16
+activation: linear
+dropout rate: 0.2646302870655941
+dropout: True
+lr: 0.1
+Score: 0.0016597668485095103
+Trial summary
+Hyperparameters:
+num_layers: 2
+units: 16
+activation: linear
+dropout rate: 0.2673273601756039
+dropout: True
+lr: 0.1
+Score: 0.001841168850660324
+Trial summary
+Hyperparameters:
+num_layers: 2
+units: 16
+activation: linear
+dropout rate: 0.2703198735612996
+dropout: True
+lr: 0.1
+Score: 0.0018427791850020487
+Trial summary
+Hyperparameters:
+num_layers: 2
+units: 16
+activation: linear
+dropout rate: 0.27408335368157777
+dropout: True
+lr: 0.1
+Score: 0.001845781730177502
+Trial summary
+Hyperparameters:
+num_layers: 2
+units: 16
+activation: linear
+dropout rate: 0.264881115557035
+dropout: True
+lr: 0.1
+Score: 0.0018979283437753718
+Trial summary
+Hyperparameters:
+num_layers: 2
+units: 16
+activation: linear
+dropout rate: 0.26549543109437945
+dropout: True
+lr: 0.1
+Score: 0.0019145345625778039
+Trial summary
+Hyperparameters:
+num_layers: 2
+units: 16
+activation: linear
+dropout rate: 0.2688787664646209
+dropout: True
+lr: 0.1
+Score: 0.0019242332006494205
+Trial summary
+Hyperparameters:
+num_layers: 2
+units: 16
+activation: linear
+dropout rate: 0.2830401300457698
+dropout: True
+lr: 0.1
+Score: 0.001928064739331603
+Trial summary
+Hyperparameters:
+num_layers: 2
+units: 16
+activation: linear
+dropout rate: 0.28376125522172757
+dropout: True
+lr: 0.1
+Score: 0.0020073586298773685
+Total time taken:  00-21-59

@@ -1,0 +1,259 @@
+##### !/usr/bin/env python
+# coding: utf-8
+
+# In[3]:
+import warnings
+warnings.filterwarnings('ignore')
+
+
+import numpy as np
+from cosmoHammer import MpiCosmoHammerSampler
+from cosmoHammer import LikelihoodComputationChain
+from sklearn.preprocessing import MinMaxScaler
+from tensorflow import keras as ks
+from cosmoHammer import CosmoHammerSampler
+import matplotlib.pyplot as plt
+import numpy as np
+from tensorflow import keras as ks
+#import MCMC_CosmoHammer as mcmc
+import time
+from cosmoHammer.util import Params
+#peak, min., max., jump
+from ann_input import *
+# In[2]:
+import math
+
+pi=math.pi
+
+import os
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
+
+# In[10]:
+
+
+prior= Params(('Mhmin',[0.0,-0.4328129267019357,0.4328129267019357,0.00039945816954493375]),
+              ('alpha', [0.395,0.395,0.395,0]))
+err=np.loadtxt('data/cii_er')
+par=np.loadtxt('data/params_t')
+
+
+class Core_Module(object):
+    def __init__(self,model_name):
+        self.model=ks.models.load_model(model_name)
+
+    def __call__(self,ctx):
+        par=ctx.getParams()
+
+        ctx.add('params',par)
+
+        params = np.array([i for i in par])
+        params=np.reshape(params,(1,2))
+        model = ks.models.load_model('cii_model.h5')
+
+        model_th=model.predict(params)
+        model_th=np.exp(10*model_th)
+
+        ctx.add("model_th",model_th)
+
+
+    @staticmethod
+    def setup():
+        print("Core is done!")
+
+
+# In[17]:
+
+
+class Likelihood_Module(object):
+    def __init__(self,data,nbins):
+        self.data= data
+        noise=(data/np.sqrt(nbins))
+        eye = np.eye(len(data))
+        if np.sum(nbins) != 0.:
+            cov = abs(data ** 2) / nbins
+            cov = cov + np.abs(noise)
+            cov = eye * cov
+            cov_inv = np.linalg.inv(cov)
+
+        else:
+            cov = np.abs(noise)
+            cov = eye * cov
+            cov_inv = np.linalg.inv(cov)
+
+        self.div = 1.0
+        self.cov = cov
+        self.cov_inv = cov_inv
+
+    def computeLikelihood(self,ctx):
+        model_th=ctx.get('model_th')
+        diff=np.subtract(model_th,self.data).reshape(1,len(self.data))
+        logl=-np.dot(diff,np.dot(self.cov_inv,diff.T))/2.
+        return logl
+
+    @staticmethod
+    def setup():
+        print("Likelihood setup done!")
+
+
+# In[18]:
+
+
+class RunMCMC:
+    """ sampler & MPI sampler class """
+
+    def __init__(self, prior, data, nbins, model, noise=0., div=1.0, like_func='n'):
+        """
+        :param data: load your data
+        :param nbins: number of k-modes in powerspectrum OR
+         number of triangle contributions in bispectrum (for covariance matrix)
+        :param noise: system noise, e.g. SKA, MWA noise response (if any), default 0.0,
+        :param div: likelihood normalization factor, default 1.0,
+        :param like_func: choose between complex likelihood function (use 'c'), and normal function (use 'n')
+        prefer complex likelihood for bispectrum
+        """
+        self.params=prior
+        chain = LikelihoodComputationChain(min=self.params[:, 1], max=self.params[:, 2])
+        chain.params = prior
+        if like_func == 'n':
+            chain.addLikelihoodModule(Likelihood_Module(data,nbins))
+        else:
+            chain.addLikelihoodModule(ComplexLikeModule(data, nbins, noise, div))
+        self.chain = chain
+
+
+    def load_model(self, load_model='cii_model.h5', name='pk'):
+
+        """
+        :param load_model: load your own model, (give the path)
+        :param name: name for data, ('pk','bk')==>for powerspectrum, bispectrum
+        :param norm: rescale used in the training
+        """
+        self.name = name
+        self.chain.addCoreModule(Core_Module(load_model))
+        self.chain.setup()
+
+
+    def sampler(self, walker_ratio, burnin, samples, num, threads=-1):
+        """
+            :param walker_ratio:  the ratio of walkers and the count of sampled parameters
+            :param burnin: burin iterations
+            :param samples: no. of sample iterations
+            :param num: number to put in output files e.g: string(name+num)=Pk_1,Bk_1
+            :param threads: no. of cpu threads
+
+            self.chain.setup()
+            print("find best fit point")
+            pso = MpiParticleSwarmOptimizer(self.chain, params[:, 1], params[:, 2])
+            psoTrace = np.array([pso.gbest.position.copy() for _ in pso.sample()])
+            params[:, 0] = pso.gbest.position
+        """
+
+
+        sampler = CosmoHammerSampler(
+            params=self.params,
+            likelihoodComputationChain=self.chain,
+            filePrefix='%s' % self.name + '%d' % num,
+            walkersRatio=walker_ratio,
+            burninIterations=burnin,
+            sampleIterations=samples, threadCount=threads)
+
+
+        print("started sampling:")
+        start = time.time()
+        sampler.startSampling()
+        end = time.time()
+        tics = end - start
+        print("The time taken %.2f sec. done!" % tics)
+        print('Done!')
+
+
+
+npk=np.loadtxt(npk_p,usecols=(2,3,4,5,6,7))
+k = np.loadtxt(k_p)
+nbins = np.loadtxt(n_p)
+params=np.loadtxt(path+'params_t')
+
+dpk=np.empty(np.shape(npk))
+for i in range(len(npk)):
+    for j in range(len(npk[0])):
+        dpk[i,j]=((k[j]**3)*npk[i,j])/(2*pi**2)
+fn_t=np.log(dpk)/10
+print("Dimensionless power spectrum: ",dpk[202])
+
+n=np.loadtxt('data/nbins.txt')
+
+params_test=np.loadtxt('data/params_t')
+ind=[]
+i=0
+'''
+for el in par[:,0]:
+    if el>1.0 and el<6.0:
+        ind.append(i)
+    i+=1
+'''
+#ind=np.where(par[:,0]<6.0)
+# # i=np.random.randint(low=0,high=len(params_test),size=24)
+#i=np.random.choice(ind)
+# print(params_test[i])
+# # ip=open('i_vals','w+')
+# # ip.write(str(i))
+# # print(params_test)
+# i=input("Enter the index: ")
+i=[202]
+print("chosen values: ",params_test[i])
+samples=input("enter number of samples: ")
+samples=int(samples)
+for el in i:
+    print(fn_t[el])
+    sampler=RunMCMC(prior=prior,data=fn_t[el],nbins=n,model='pk')
+    sampler.load_model()
+    sampler.sampler(walker_ratio=2,burnin=0.1*samples,samples=samples,num=el)
+
+
+# In[3]:
+
+# import numpy as np
+# from chainconsumer import ChainConsumer
+# import matplotlib.pyplot as plt
+# import matplotlib as mpl
+# mpl.rcParams['figure.facecolor']='white'
+#
+# data=np.loadtxt('pk'+str(i)+'.out') #sample saved with name 'model num.out'
+#
+# truth = params_test[i]
+#
+# c = ChainConsumer()
+# c.add_chain(data[:,0], parameters=[r"$M_{(h, {\rm min})}(\rm 10^{10} M_\odot)$"],
+#                 name='CV+Noise',color='#F28482')
+# c.configure(label_font_size=18,linestyles='-',linewidths=2, tick_font_size=18,shade_alpha=1, )
+# c.configure_truth(color='k', ls=":", lw=1.5)
+# # plt.text(56.1,200,'truth: '+'{:.2f}'.format(truth[0])+'\n walkers: 4 \n samples: 1000 \n step size: 0.01',fontsize=10,bbox={'facecolor': 'white', 'alpha': 0.5, 'pad': 5})
+#
+# fig = c.plotter.plot(truth=truth)
+# fig.set_size_inches(5 + fig.get_size_inches())
+# plt.savefig('plot_'+'{:.2f}'.format(truth[0])+'_emulated.png',bbox_inches='tight',dpi=300)
+
+
+# In[4]:
+
+
+# plt.figure(figsize=(10,10))
+# data=np.loadtxt('pk172.out')
+# # plt.xlim([39,43])
+# # plt.axvline(41.044,c='cyan')
+# # plt.axvline(40.26,c='black')
+# mpl.rcParams['text.usetex']=True
+# mpl.rcParams['font.size']=28
+# #plt.text(120.7,190,'truth: '+'{:.2f}'.format(truth[0])+'\n walkers: 4 \n samples: 1000 \n step size: 0.01',fontsize=10,bbox={'facecolor': 'white', 'alpha': 0.5, 'pad': 5})
+# n,bins,patches=plt.hist(data[:,0],bins=100,color='#ffffff')
+# centres=0.5*(bins[1:]+bins[:-1])
+# plt.plot(centres,n,c='#F28482',lw=3.0)
+# m=np.argmax(n)
+# plt.title('$M_{hmin} ( 10^{10} M_{\odot}) $= '+'{:.3f}'.format(bins[m]))
+# # plt.axvline(truth,c='k',ls='dotted')
+# plt.xlabel('$M_{hmin} (10^{10} M_{\odot})$')
+# plt.ylabel('Counts')
+# #plt.savefig('plot_'+'{:.2f}'.format(truth[0])+'_emulated_hist.png',bbox_inches='tight')
+# plt.show()

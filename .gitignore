@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+
+# Trained model artifacts
+*.h5
+cii_bestmodel/
+cii_history.npy
+
+# Training outputs
+predictions
+pk_test
+params_test
+cii_dpk
+cii_er
+
+# MCMC outputs
+*.out
+*.log
+
+# HPO artifacts
+HPO/
+HPO_2/
+tuning_results/
+
+# Conda / env
+cii_emu/

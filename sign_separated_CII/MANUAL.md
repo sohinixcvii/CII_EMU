@@ -25,9 +25,13 @@ Create and activate the conda environment once:
 conda create -n cii_emu python=3.10 -y
 conda activate cii_emu
 pip install "tensorflow==2.13.0" "keras-tuner" "scikit-learn" \
-            "numpy<2" "matplotlib" "cosmoHammer==0.6.1" \
-            "emcee==2.0.0" "mpi4py"
+            "numpy<2" "matplotlib" "emcee>=3.1" "tqdm"
 ```
+
+> **Note:** `cosmoHammer` has been removed. The MCMC stage now uses
+> `emcee 3.x` directly, which is actively maintained and has no external
+> MPI dependencies for single-machine use. `tqdm` is optional but
+> enables progress bars during sampling.
 
 All subsequent commands assume the environment is active:
 
@@ -163,8 +167,9 @@ Predictions saved to file!
 
 ## 6. Stage 3 — MCMC Parameter Inference
 
-MCMC.py is interactive. It requires `cii_model.h5` from Stage 2, plus `data/cii_er`
-and `data/params_t`.
+`MCMC.py` uses **emcee** (affine-invariant ensemble sampler). It requires
+`cii_model.h5` from Stage 2 plus `data/params_t`, `data/k.txt`, `data/Npk.txt`,
+and `data/nbins.txt`.
 
 ```bash
 python MCMC.py
@@ -172,43 +177,42 @@ python MCMC.py
 
 When prompted:
 ```
-enter number of samples: 1000
+Enter number of samples: 1000
 ```
 
-Enter the total number of sampling iterations. Burnin is set automatically to 10%.
+Enter the number of production steps per walker. Burn-in is automatically 10% of
+that number.
 
 **What it does:**
-1. Loads the trained model (`cii_model.h5`) once into `Core_Module`
-2. For parameter index `i=202` (hardcoded), uses the corresponding power spectrum
-   from `params_t` as the "observed" data
-3. Builds a Gaussian likelihood with a diagonal covariance from `data/cii_er` and
-   `data/nbins.txt`
-4. Runs `CosmoHammerSampler` with:
-   - 2 walkers per free parameter (walker_ratio=2 → 4 walkers total for 2 params)
-   - burnin = 10% of samples
-   - Free parameter: `Mhmin` ∈ [−0.433, +0.433], initialised at 0.0
-   - Fixed parameter: `alpha` = 0.395 (step=0, min=max=centre)
+1. Loads and preprocesses the power spectrum data (same pipeline as Stage 2)
+2. For parameter index `idx=202` (hardcoded), uses the corresponding log-scaled
+   power spectrum `fn_t[202]` as the "observed" data
+3. Builds a diagonal Gaussian covariance from `data/nbins.txt`:
+   `cov_ii = |data_i²| / nbins_i + |data_i / √nbins_i|`
+4. Runs `emcee.EnsembleSampler` with `vectorize=True` so all walkers are
+   batched into a single `model.predict()` call per step:
+   - 4 walkers (matches original walker_ratio=2 × 2 params)
+   - burn-in = 10% of samples (discarded, chain reset)
+   - Free parameter: `Mhmin` ∈ (−0.4328, +0.4328), uniform prior
+   - Fixed parameter: `alpha` = 0.395 (never sampled)
+5. Saves the flattened chain and prints the mean acceptance fraction
 
-**Prior definition** (in `MCMC.py`, edit to change):
+**Configuration constants** (edit in `MCMC.py` to change):
 ```python
-prior = Params(
-    ('Mhmin', [0.0, -0.4328129267019357, 0.4328129267019357, 0.00039945816954493375]),
-    ('alpha', [0.395, 0.395, 0.395, 0])
-)
-# format: [start, min, max, step_width]
+MHMIN_BOUNDS = (-0.4328129267019357, 0.4328129267019357)  # uniform prior limits
+ALPHA_FIXED  = 0.395    # held fixed throughout
+MODEL_PATH   = 'cii_model.h5'
 ```
 
 **Output files** (written to `sign_separated_CII/`):
 
 | File | Contents |
 |------|----------|
-| `pk202.out` | Posterior samples (columns = parameters) |
-| `pk202burnin.out` | Burnin samples |
-| `pk202prob.out` | Log-probability at each sample |
-| `pk202burninprob.out` | Log-probability during burnin |
-| `pk202burninstate.out` | Final state after burnin |
+| `pk202.out` | Flattened posterior samples, shape `(n_walkers × n_samples, 1)` |
 
-The number `202` comes from the hardcoded index `i=[202]` in `MCMC.py`.
+The number `202` comes from `idx = 202` in `MCMC.py`.
+The old CosmoHammer burnin/prob/state output files are no longer produced; burn-in
+samples are discarded by `sampler.reset()` before the production run.
 
 ---
 
@@ -258,7 +262,7 @@ Load and inspect the chain:
 import numpy as np
 import matplotlib.pyplot as plt
 
-chain = np.loadtxt('pk202.out')   # shape (n_samples * n_walkers, n_params)
+chain = np.loadtxt('pk202.out')   # shape (n_walkers * n_samples, 1)
 
 # Mhmin marginal posterior
 plt.hist(chain[:, 0], bins=50)
@@ -266,8 +270,8 @@ plt.xlabel('Mhmin'); plt.ylabel('Counts')
 plt.title('Posterior on Mhmin')
 plt.show()
 
-print("MAP estimate:", chain[:, 0].mean())
-print("Std dev:", chain[:, 0].std())
+print("Posterior mean:", chain[:, 0].mean())
+print("Posterior std:",  chain[:, 0].std())
 ```
 
 To overlay the truth value:
@@ -278,17 +282,21 @@ truth = params_test[202]
 plt.axvline(truth[0], color='k', ls='--', label='truth')
 ```
 
-Check for chain convergence by inspecting the burnin:
+Check for chain convergence using the emcee autocorrelation time:
 
 ```python
-burnin = np.loadtxt('pk202burnin.out')
-plt.plot(burnin[:, 0])
-plt.xlabel('Step'); plt.ylabel('Mhmin'); plt.title('Burnin trace')
-plt.show()
+import emcee, numpy as np
+
+# Re-load as a 3-D chain (n_steps, n_walkers, n_dim) if you kept the sampler object,
+# or estimate from the flat chain directly:
+chain = np.loadtxt('pk202.out')   # (n_steps * n_walkers, 1)
+print("Posterior std:", chain[:, 0].std())
+# For a proper convergence check, inspect acceptance fraction printed at runtime.
+# Aim for 0.2–0.5; if < 0.1 the walkers are stuck.
 ```
 
-A well-converged chain should show the trace mixing around a stable value after burnin.
-If it does not, increase the number of samples or adjust the prior step width in `MCMC.py`.
+A well-converged run prints a mean acceptance fraction between 0.2 and 0.5. If it is
+very low, increase `n_walkers` in the `run_mcmc()` call inside `MCMC.py`.
 
 ---
 
@@ -319,8 +327,45 @@ python MCMC.py
 | Symptom | Likely cause | Fix |
 |---------|-------------|-----|
 | `ImportError: cannot import name ... from keras` | Wrong keras version | Ensure `tensorflow==2.13.0` is installed |
+| `ModuleNotFoundError: No module named 'emcee'` | emcee not installed | `pip install "emcee>=3.1"` |
 | `FileNotFoundError: data/Npk.txt` | Wrong working directory | Run scripts from inside `sign_separated_CII/` |
 | `EOFError: EOF when reading a line` (MCMC) | stdin not attached | Run `python MCMC.py` directly in a terminal, not piped |
 | Mean % error > 20% | Too few epochs or poor hyperparameters | Increase `epochs` in `ann_input.py` or re-run HPO |
-| MCMC chain not mixing | Step width too small | Increase the 4th element of the `Mhmin` prior tuple in `MCMC.py` |
-| `shmem: mmap` warnings | MPI probing shared memory on macOS | Harmless; suppress with `export OMPI_MCA_btl_vader_single_copy_mechanism=none` |
+| MCMC acceptance fraction < 0.1 | Walkers stuck; proposal scale too large | Increase `n_walkers` in `run_mcmc()` call inside `MCMC.py` |
+| No progress bar shown during sampling | `tqdm` not installed | `pip install tqdm` |
+
+---
+
+## 10. Changelog
+
+### 2026-02-23
+
+**`MCMC.py` — replaced CosmoHammer with emcee**
+
+`cosmoHammer` is no longer maintained. `MCMC.py` has been rewritten to use
+`emcee 3.x` (the affine-invariant ensemble sampler that CosmoHammer itself
+was built on top of).
+
+Changes made:
+
+- Removed all `cosmoHammer` imports and the `Core_Module` / `Likelihood_Module` /
+  `RunMCMC` class structure that existed only to satisfy the CosmoHammer API
+- Added `make_log_posterior()` which returns a **vectorized** log-posterior
+  function: emcee passes all walker positions at once, so a single
+  `model.predict(batch)` call handles every walker per step — much faster
+  than the old one-at-a-time approach
+- Replaced nested Python loops for computing Δ²(k) with NumPy broadcasting:
+  `dpk = k**3 * npk / (2 * np.pi**2)`
+- Covariance inversion now uses `np.diag(1/cov_diag)` instead of
+  `np.linalg.inv` on a diagonal matrix
+- Removed unused imports: `MinMaxScaler`, `matplotlib`, `math`, `Params`
+- Changed `from ann_input import *` to explicit named imports
+- Replaced `math.pi` with `np.pi`
+- Moved prior bounds and fixed parameters to named module-level constants
+  (`MHMIN_BOUNDS`, `ALPHA_FIXED`, `MODEL_PATH`)
+- Removed all dead/commented-out code and Jupyter notebook `# In[N]:` tags
+- Output file: only `pk{index}.out` (burn-in samples discarded via
+  `sampler.reset()`; the old CosmoHammer `burnin.out`, `prob.out`, etc. are gone)
+- `emcee` dependency added; `cosmoHammer` dependency removed
+
+**`MANUAL.md`** updated to reflect all of the above.

@@ -1,0 +1,33 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.pyo
+
+# ---- Jupyter ----
+.ipynb_checkpoints/
+
+# ---- Large trained-model artefacts ----
+# Use git-lfs if you need to version these
+*.joblib
+cii_bestmodel/
+tuning_results/
+
+# ---- Generated outputs (reproducible from scripts) ----
+pk_test
+params_test
+predictions
+cii_history.npy
+pk*.out
+pk*.log
+pk*burnin*.out
+pk*prob.out
+pk*state.out
+
+# ---- Raw/simulated data (tracked separately or via DVC) ----
+data/
+
+# ---- Misc ----
+log
+LogLikelihood
+HPO
+HPO_2

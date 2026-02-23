@@ -32,3 +32,4 @@ dependencies:
     - matplotlib>=3.8
     - emcee>=3.1                 # affine-invariant ensemble sampler (replaces cosmoHammer)
     - tqdm                       # progress bars for emcee sampling
+    - joblib                     # serialise GP model bundle (transitive dep of sklearn)

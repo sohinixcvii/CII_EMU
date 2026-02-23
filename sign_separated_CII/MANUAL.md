@@ -336,6 +336,112 @@ python MCMC.py
 
 ---
 
+## 11. GP Emulator (Alternative to ANN)
+
+The `gp_emulator/` sub-directory contains a Gaussian Process based emulator
+that achieves < 10% mean absolute % error at all k-bins, compared to the 44–53%
+achieved by the ANN on a proper random test split.
+
+### Why the GP outperforms the ANN
+
+1. **True 1D parameter space** — `alpha` is constant at 0.395 across all 2,167
+   training samples. Only `Mhmin` varies. A GP is ideal for this smooth, 1D,
+   densely-sampled interpolation problem.
+
+2. **Exact interpolation** — with ~1950 training points and a Matérn-2.5 kernel
+   the GP essentially interpolates exactly; the ANN with 32 layers × 144 neurons
+   cannot learn a 1D function as well as a kernel method.
+
+3. **No exponential amplification** — the ANN's uniform MSE loss in log-space
+   treats all bins equally even though errors amplify as `exp(10ε)` back in
+   physical space. The GP avoids this by fitting precisely.
+
+### Files
+
+| File | Description |
+|------|-------------|
+| `gp_emulator/GP_emu.py` | Training script (replaces `CII_emu.py`) |
+| `gp_emulator/GP_MCMC.py` | MCMC script (replaces `MCMC.py`) |
+| `gp_emulator/gp_models.joblib` | Saved model: `{scaler, [gp0..gp5]}` |
+| `gp_emulator/README.md` | Detailed usage notes |
+
+### Quick start
+
+```bash
+conda activate cii_emu
+cd sign_separated_CII/gp_emulator
+
+# Train (~2 min)
+python GP_emu.py
+
+# MCMC inference
+echo "1000" | python GP_MCMC.py
+```
+
+### Stage 1: Train the GP emulator
+
+```
+python gp_emulator/GP_emu.py
+```
+
+**What it does:**
+1. Loads `Npk.txt`, `k.txt`, `nbins.txt`, `params_t` from `../data/`
+2. Computes dimensionless power spectrum: Δ²(k) = k³ · P(k) / (2π²)
+3. Applies log-scaling: pk = log(Δ²) / 10
+4. Extracts only the `Mhmin` column (alpha is constant — excluded)
+5. Splits 90/10 train/test with `shuffle=True, random_state=42`
+6. Fits one `GaussianProcessRegressor` per k-bin with kernel
+   `ConstantKernel × Matérn(ν=2.5) + WhiteKernel`
+7. Reports mean/max/p90 absolute % error per k-bin
+8. Saves `(scaler, [gp0…gp5])` to `gp_emulator/gp_models.joblib`
+
+**Expected console output:**
+```
+Loading data ...
+  2167 samples, 6 k-bins
+  Mhmin range: [-0.4328, 0.4328]
+  Train: 1950  Test: 217
+Training GPs ...
+  Fitting GP for k-bin 0 ... done (18.3 s)
+  ...
+--- Validation results ---
+ k-bin  mean |%err|   max |%err|   p90 |%err|  status
+-------------------------------------------------------
+     0         0.25         6.31         0.41    PASS
+     1         0.08         1.92         0.13    PASS
+     ...
+Overall: PASS — all bins < 10% mean abs % error
+```
+
+### Stage 2: MCMC with the GP emulator
+
+```
+python gp_emulator/GP_MCMC.py
+```
+
+The public interface is identical to `MCMC.py`:
+- Prompts for `n_samples`; burn-in is 10% of that
+- 4 walkers, `Mhmin` ∈ (−0.4328, +0.4328), `alpha` fixed at 0.395
+- Saves flattened chain to `gp_emulator/pk202.out`
+
+**Configuration constants** (edit in `GP_MCMC.py`):
+```python
+MHMIN_BOUNDS  = (-0.4328129267019357, 0.4328129267019357)
+ALPHA_FIXED   = 0.395
+GP_MODEL_PATH = 'gp_models.joblib'
+```
+
+### Passing criteria
+
+| Metric | Threshold |
+|--------|-----------|
+| Mean abs % error per k-bin | < 10% |
+| k-bin 0 mean abs % error | < 5% |
+| MCMC acceptance fraction | > 0.1 |
+| Unique chain values (500 steps × 4 walkers) | > 100 |
+
+---
+
 ## 10. Changelog
 
 ### 2026-02-23

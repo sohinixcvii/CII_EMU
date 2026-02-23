@@ -91,10 +91,10 @@ def make_log_posterior(model, data, cov_inv):
 
         # Batch-predict for all walkers simultaneously
         params   = np.column_stack([mhmin, np.full(len(mhmin), ALPHA_FIXED)])
-        preds    = model.predict(params, verbose=0)      # (n_walkers, n_k)
-        model_th = np.exp(10 * preds)                    # undo log-scaling → dpk
+        model_th = model.predict(params, verbose=0)      # (n_walkers, n_k), log-scaled
 
         # Gaussian log-likelihood: -0.5 * diff^T C^{-1} diff
+        # Both model_th and data are in log(dpk)/10 space
         diff     = model_th - data[np.newaxis, :]        # (n_walkers, n_k)
         loglikes = -0.5 * np.einsum('ij,jk,ik->i', diff, cov_inv, diff)
 

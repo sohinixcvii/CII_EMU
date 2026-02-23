@@ -13,8 +13,6 @@ from sklearn.preprocessing import MinMaxScaler
 from tensorflow import keras as ks
 from cosmoHammer import CosmoHammerSampler
 import matplotlib.pyplot as plt
-import numpy as np
-from tensorflow import keras as ks
 #import MCMC_CosmoHammer as mcmc
 import time
 from cosmoHammer.util import Params
@@ -22,7 +20,6 @@ from cosmoHammer.util import Params
 from ann_input import *
 # In[2]:
 from math import *
-import numpy as np
 from chainconsumer import ChainConsumer
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -65,9 +62,8 @@ class Core_Module(object):
 
         params = np.array([i for i in par])
         params=np.reshape(tr(params),(1,2))
-        model = ks.models.load_model('cii_model.h5')
 
-        model_th=model.predict(params, verbose=0)
+        model_th=self.model.predict(params, verbose=0)
         # model_th=np.exp(10*model_th)
 
         ctx.add("model_th",model_th)
@@ -223,7 +219,7 @@ for el in range(len(i)):
     st=time.time()
     sampler=RunMCMC(prior=prior,data=fn_t[el],nbins=n,model='pk')
     sampler.load_model()
-    sampler.sampler(walker_ratio=2,burnin=0.1*samples,samples=samples,num=i[el])
+    sampler.sampler(walker_ratio=2,burnin=int(0.1*samples),samples=samples,num=i[el])
     tt=time.time()-st
     print("Time taken for ",i[el],time.strftime("%H-%M-%S",time.gmtime(tt)))
     break

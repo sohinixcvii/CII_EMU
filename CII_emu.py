@@ -4,8 +4,8 @@ import numpy as np
 import sklearn.model_selection as sm
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow import keras as ks
-from keras.callbacks import EarlyStopping
-from keras.callbacks import ModelCheckpoint
+from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.callbacks import ModelCheckpoint
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import tensorflow as tf
@@ -28,14 +28,8 @@ pk=np.log(dpk)/10
 
 #splitting data set into training set and test set
 params_train,params_test,pk_train,pk_test = sm.train_test_split(params,pk, test_size=0.1, random_state=10,shuffle=False)
-pk_fn = open('pk_test', 'w+')
-params_fn = open('params_test', 'w+')
-
-np.savetxt(pk_fn, pk_array)
-np.savetxt(params_fn, params_array)
-
-pk_fn.close()
-params_fn.close()
+fn.save_to_file(pk_test,'pk_test')
+fn.save_to_file(params_test,'params_test')
 
 
 #building and training the model

@@ -1,18 +1,18 @@
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow import keras as ks
-from keras.callbacks import ModelCheckpoint
-from keras.callbacks import EarlyStopping
+from tensorflow.keras.callbacks import ModelCheckpoint
+from tensorflow.keras.callbacks import EarlyStopping
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import tensorflow as tf
 from ann_input import *
 
-model=ks.models.Sequential()
 dense=ks.layers.Dense
 
 def build_model(params_train,pk_train,params_test,pk_test,epochs,
         batch,validation,thres_acc,layers,neurons,dropout,dropout_rate,lr,activ):
+    model=ks.models.Sequential()
     opt=ks.optimizers.Adam(learning_rate=lr)
     es=EarlyStopping(monitor='loss',baseline=None,patience=20,verbose=0,min_delta=0.0001,mode='min',)
     mc=ModelCheckpoint('cii_bestmodel',monitor='loss',save_best_only=True,verbose=1)
@@ -39,12 +39,11 @@ def build_model(params_train,pk_train,params_test,pk_test,epochs,
 def save_to_file(data,label):
     if label=='predictions':
         with open("predictions","w") as fn_p:
-        	for el in data:
-        		for n in el:
-        			fn_p.write(str(n)+"\t")
-        		fn_p.write("\n")
-        	fn_p.truncate()
-        	fn_p.close()
+            for el in data:
+                for n in el:
+                    fn_p.write(str(n)+"\t")
+                fn_p.write("\n")
+            fn_p.truncate()
         print("\n Predictions saved to file! \n")
     elif label=='pk_test':
         fn_pk=open("pk_test",'w')
@@ -58,9 +57,9 @@ def save_to_file(data,label):
     elif label=='params_test':
         fn_params=open("params_test",'w')
         for el in data:
-        	for n in el:
-        		fn_params.write(str(n)+"\t")
-        	fn_params.write("\n")
+            for n in el:
+                fn_params.write(str(n)+"\t")
+            fn_params.write("\n")
         fn_params.truncate()
         fn_params.close()
         print("\n Parameters test set saved to file. \n")

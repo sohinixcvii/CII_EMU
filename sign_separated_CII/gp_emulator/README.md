@@ -1,7 +1,10 @@
 # GP Emulator for CII Power Spectrum
 
-This directory contains a Gaussian Process (GP) based emulator that replaces
-the ANN (`CII_emu.py` / `cii_model.h5`) for higher accuracy.
+This directory contains a Gaussian Process (GP) based emulator. 
+
+## History of this project:
+
+We were initially using an ANN based emulator for this project. Upon testing it was found that the ANN based emulator was failing at modelling with sufficient accuracy. 
 
 ## Why GP instead of ANN?
 
@@ -13,6 +16,8 @@ The ANN achieves 44–53% mean absolute % error on a proper random test split du
 to (a) exponential amplification of log-space errors, and (b) the mismatch
 between a 32-layer network and a trivial 1D function. The GP resolves both.
 
+We have set a threshold accuracy of <10% for all k-bins. 
+
 **Measured accuracy (vs <10% threshold):**
 - All 6 k-bins: mean absolute % error < 10%
 - k-bin 0 (hardest): ~0.25% mean, ~6% max
@@ -22,7 +27,7 @@ between a 32-layer network and a trivial 1D function. The GP resolves both.
 | File | Description |
 |------|-------------|
 | `GP_emu.py` | Training script: fits 6 GPs and saves `gp_models.joblib` |
-| `GP_MCMC.py` | MCMC inference: drop-in replacement for `../MCMC.py` using GPs |
+| `GP_MCMC.py` | MCMC inference using GPs |
 | `gp_models.joblib` | Saved model artefact (produced by `GP_emu.py`) |
 | `README.md` | This file |
 
@@ -32,12 +37,12 @@ Run from inside the `gp_emulator/` directory:
 
 ```bash
 conda activate cii_emu
-cd sign_separated_CII/gp_emulator
+cd gp_emulator
 
 # Step 1: Train the GPs (~2 min)
 python GP_emu.py
 
-# Step 2: Run MCMC with the GP emulator
+# Step 2: Run MCMC with the GP emulator; echo number of iterations
 echo "500" | python GP_MCMC.py
 ```
 

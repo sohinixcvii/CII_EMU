@@ -53,7 +53,6 @@ All data files live in the `data/` subdirectory.
 | `data/nbins.txt` | Number of k-modes per bin (used in covariance) |
 | `data/params_t` | Parameter samples used for training (`Mhmin`, `alpha`) |
 | `data/params_LH.txt` | Latin Hypercube parameter samples (used by HPO only) |
-| `data/cii_er` | Observational errors (used by MCMC likelihood) |
 
 Do not rename these files; paths are set in `ann_input.py`.
 
@@ -443,6 +442,25 @@ GP_MODEL_PATH = 'gp_models.joblib'
 ---
 
 ## 10. Changelog
+
+### 2026-08-01
+
+**Repository cleanup**
+
+- Removed root-level legacy ANN pipeline (`ann_input.py`, `CII_emu.py`,
+  `functions.py`, `Hyperparameter_tuning.py`, `MCMC.py`, `MCMC_noisy.py`).
+  The canonical versions live in `sign_separated_CII/`.
+- Removed `sign_separated_CII/Cross_emu.py` (superseded by `CII_emu.py`).
+- Removed `Commit_details`, `Model_metadata`, `model_files/`, `MCMC_results/`
+  (historical artefacts no longer needed).
+- Removed exploratory notebooks (`CII_revisit.ipynb`,
+  `Hyperparameter_tuning_params_transform.ipynb`, `MCMC_plots.ipynb`,
+  `Miscellaneous_checks.ipynb`) and duplicate `gp_emulator/MANUAL.md`.
+- Removed `data/noise` (only used by the removed `MCMC_noisy.py`).
+- Corrected required data files table: removed `data/cii_er`, which is not
+  used by any current script (neither `MCMC.py` nor `GP_MCMC.py` reads it;
+  covariance is computed from `nbins.txt` and the observed spectrum directly).
+- Updated root `README.md` to serve as a proper project overview.
 
 ### 2026-02-23
 

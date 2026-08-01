@@ -1,10 +1,8 @@
-# Conda environment for the CII sign-separated emulator + MCMC pipeline.
+# Conda environment for the CII emulator pipeline (Linux / Intel macOS).
 #
-# Apple Silicon (arm64) note:
-#   tensorflow-macos is the arm64 build of TensorFlow; it is pip-only.
-#   If running on Intel macOS or Linux, replace tensorflow-macos with tensorflow.
+# Apple Silicon (macOS arm64) users: use environment-macos-arm64.yaml instead.
 #
-# To create the environment:
+# To create:
 #   conda env create -f environment.yaml
 #
 # To activate:
@@ -24,12 +22,12 @@ dependencies:
   - pip
 
   - pip:
-    - tensorflow-macos==2.13.0   # arm64 macOS; swap for tensorflow==2.13.0 on Intel/Linux
+    - tensorflow==2.13.0
     - keras==2.13.1
     - keras-tuner==1.4.8
     - scikit-learn>=1.5
     - numpy<2                    # TF 2.13 is incompatible with numpy 2.x
     - matplotlib>=3.8
-    - emcee>=3.1                 # affine-invariant ensemble sampler (replaces cosmoHammer)
+    - emcee>=3.1                 # affine-invariant ensemble sampler
     - tqdm                       # progress bars for emcee sampling
     - joblib                     # serialise GP model bundle (transitive dep of sklearn)

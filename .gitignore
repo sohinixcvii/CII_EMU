@@ -22,6 +22,10 @@ cii_er
 # MCMC outputs
 *.out
 *.log
+model_log
+
+# Generated plots
+*.png
 
 # HPO artifacts
 HPO/
